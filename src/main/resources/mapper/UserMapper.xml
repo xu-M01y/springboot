@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.itxu.springboot.mapper.UserMapper">
+
+
+    <!--  <update id="update">
+          UPDATE sys_user
+          <set>
+              <if test="username != null">
+                  username = #{username},
+              </if>
+              <if test="password != null">
+                  password = #{password},
+              </if>
+              <if test="nickname != null">
+                  nickname = #{nickname},
+              </if>
+              <if test="email != null">
+                  email = #{email},
+              </if>
+              <if test="phone != null">
+                  phone = #{phone},
+              </if>
+              <if test="address != null">
+                  address = #{address}
+              </if>
+          </set>
+          <where>
+              id = #{id}
+          </where>
+      </update>
+
+      <delete id="deleteByName">
+          DELETE FROM sys_user where username = #{username}
+
+      </delete>
+  -->
+
+
+    <resultMap id="pageUser" type="com.itxu.springboot.pojo.User">
+        <result column="id" property="id"/>
+        <result column="username" property="username"/>
+        <result column="nickname" property="nickname"/>
+        <result column="email" property="email"/>
+        <result column="address" property="address"/>
+        <result column="phone" property="phone"/>
+        <result column="role" property="role"/>
+        <result column="creat_time" property="creatTime"/>
+        <result column="avatar_url" property="avatarUrl"/>
+        <!--将一些字段封装成对象-->
+        <collection property="courses" javaType="java.util.List" ofType="com.itxu.springboot.pojo.Course">
+            <result column="teaCourseName" property="name"/>
+            <result column="teaCourseScore" property="score"/>
+        </collection>
+        <collection property="stuCourses" javaType="java.util.List" ofType="com.itxu.springboot.pojo.Course">
+            <result column="stuCourseName" property="name"/>
+            <result column="stuCourseScore" property="score"/>
+        </collection>
+    </resultMap>
+
+    <select id="findPage" resultMap="pageUser">
+        select sys_user.* , sc.name stuCourseName , sc.score stuCourseScore ,tc.name
+        teaCourseName,tc.score teaCourseScore from sys_user
+        left join sys_student_course
+        on sys_user.id = sys_student_course.student_id
+        left join sys_course sc
+        on sys_student_course.course_id = sc.id
+        left join sys_course tc
+        on sys_user.id = tc.teacher_id
+        <where>
+            <if test="email != null and email != ''">
+                and sys_user.username like concat('%',#{username},'%')
+            </if>
+            <if test="email != null and email != ''">
+                and sys_user.email like concat('%',#{email},'%')
+            </if>
+            <if test="address != null and address != ''">
+                and sys_user.address like concat('%',#{address},'%')
+            </if>
+        </where>
+
+    </select>
+</mapper>

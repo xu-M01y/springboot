@@ -1,0 +1,29 @@
+server:
+  port: 9090
+
+
+spring:
+  datasource:
+    driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/xu
+    username: root
+    password: 1234
+
+  mvc:
+    hiddenmethod:
+      filter:
+        enabled: true
+
+
+mybatis-plus:
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+
+files:
+  upload:
+    path: D:/代码/小白做毕设/files/
+
+
+
+
+
